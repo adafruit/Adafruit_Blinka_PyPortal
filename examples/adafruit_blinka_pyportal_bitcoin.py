@@ -11,9 +11,9 @@ import time
 import board
 import digitalio
 import displayio
+from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 import adafruit_ili9341
 from adafruit_pyportal import PyPortal
-from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 
 displayio.release_displays()
 
