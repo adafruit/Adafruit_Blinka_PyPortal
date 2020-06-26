@@ -40,6 +40,7 @@ setup(
         "adafruit-circuitpython-stmpe610",
         "adafruit-circuitpython-bitmap-font",
         "adafruit-circuitpython-display-text",
+        "adafruit-circuitpython-adafruitio",
         "wget",
     ],
     # Choose your license
