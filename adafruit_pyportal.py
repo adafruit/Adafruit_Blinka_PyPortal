@@ -27,11 +27,11 @@ import gc
 import subprocess
 import requests
 import displayio
+import wget as wget_lib
 import rtc
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
-import wget as wget_lib
 
 try:
     from secrets import secrets  # pylint: disable=no-name-in-module
