@@ -28,7 +28,6 @@ import subprocess
 import requests
 import displayio
 import wget as wget_lib
-import rtc
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
@@ -495,7 +494,6 @@ class PyPortal:
             (year, month, mday, hours, minutes, seconds, week_day, year_day, is_dst)
         )
         print(now)
-        rtc.RTC().datetime = now
 
         # now clean up
         response.close()
