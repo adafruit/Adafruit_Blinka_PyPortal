@@ -39,6 +39,7 @@ setup(
         "adafruit-blinka-displayio",
         "adafruit-circuitpython-stmpe610",
         "adafruit-circuitpython-bitmap-font",
+        "adafruit-circuitpython-display-text",
         "wget",
     ],
     # Choose your license
