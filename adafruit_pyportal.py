@@ -13,20 +13,11 @@ A port of the PyPortal library intended to run on Blinka in CPython.
 Implementation Notes
 --------------------
 
-**Hardware:**
-
-.. todo:: Add links to any specific hardware product page(s), or category page(s). Use unordered list & hyperlink rST
-   inline format: "* `Link Text <url>`_"
-
 **Software and Dependencies:**
 
 * Adafruit CircuitPython firmware for the supported boards:
   https://github.com/adafruit/circuitpython/releases
 
-.. todo:: Uncomment or remove the Bus Device and/or the Register library dependencies based on the library's use of either.
-
-# * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
-# * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
 """
 
 # imports
@@ -35,19 +26,17 @@ import time
 import gc
 import subprocess
 import requests
-import wget as wget_lib
-import board
-import busio
-from digitalio import DigitalInOut
-import pulseio
-from adafruit_bitmap_font import bitmap_font
 import displayio
+import rtc
+from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text.label import Label
+from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
+import wget as wget_lib
 
 try:
-    from secrets import secrets
+    from secrets import secrets  # pylint: disable=no-name-in-module
 except RuntimeError:
-    raise ("API tokens are kept in secrets.py, please add them there!")
+    raise "API tokens are kept in secrets.py, please add them there!"
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_pyportal.git"
@@ -69,6 +58,21 @@ LOCALFILE = "local.txt"
 # pylint: enable=line-too-long
 
 
+class Fake_Requests:
+    """For faking 'requests' using a local file instead of the network."""
+
+    def __init__(self, filename):
+        self._filename = filename
+        with open(filename, "r") as file:
+            self.text = file.read()
+
+    def json(self):
+        """json parsed version for local requests."""
+        import json  # pylint: disable=import-outside-toplevel
+
+        return json.loads(self.text)
+
+
 class PyPortal:
     """Class representing the Adafruit PyPortal.
     :param url: The URL of your data source. Defaults to ``None``.
@@ -80,8 +84,6 @@ class PyPortal:
                         use regexp.
     :param default_bg: The path to your default background image file or a hex color.
                        Defaults to 0x000000.
-    :param status_neopixel: The pin for the status NeoPixel. Use ``board.NEOPIXEL`` for the on-board
-                            NeoPixel. Defaults to ``None``, no status LED
     :param str text_font: The path to your font file for your data text display.
     :param text_position: The position of your extracted text on the display in an (x, y) tuple.
                           Can be a list of tuples for when there's a list of json_paths, for example
@@ -111,10 +113,9 @@ class PyPortal:
     :param caption_color: The color of your caption. Must be a hex value, e.g. ``0x808000``.
     :param image_url_path: The HTTP traversal path for a background image to display.
                              Defaults to ``None``.
-    :param esp: A passed ESP32 object, Can be used in cases where the ESP32 chip needs to be used
-                             before calling the pyportal class. Defaults to ``None``.
-    :param busio.SPI external_spi: A previously declared spi object. Defaults to ``None``.
     :param debug: Turn on debug print outs. Defaults to False.
+    :param display: The displayio display object to use
+    :param touchscreen: The touchscreen object to use. Usually STMPE610 or FocalTouch.
     """
 
     # pylint: disable=too-many-instance-attributes, too-many-locals, too-many-branches, too-many-statements
@@ -126,7 +127,6 @@ class PyPortal:
         json_path=None,
         regexp_path=None,
         default_bg=0x000000,
-        status_neopixel=None,
         text_font=None,
         text_position=None,
         text_color=0x808080,
@@ -144,7 +144,6 @@ class PyPortal:
         caption_color=0x808080,
         image_url_path=None,
         success_callback=None,
-        external_spi=None,
         debug=False,
         display=None,
         touchscreen=None
@@ -439,9 +438,8 @@ class PyPortal:
         self._debug_print("Playing audio file", file_name)
         os.system("aplay -Dhw:" + str(self._audio_device) + ",0 " + file_name)
         if not wait_to_finish:
-            print(
-                "Immediately returning not currently supported. We'll have to add threading to get this working."
-            )
+            # To do: Add threading support
+            print("Immediately returning not currently supported.")
 
     @staticmethod
     def _json_traverse(json, path):
@@ -504,6 +502,7 @@ class PyPortal:
         response = None
         gc.collect()
 
+    # pylint: disable=no-self-use
     def wget(self, url, filename):
         """Download a url and save to filename location, like the command wget.
         :param url: The URL from which to obtain the data.
@@ -511,6 +510,8 @@ class PyPortal:
         """
         print("Fetching stream from", url)
         wget_lib.download(url, filename)
+
+    # pylint: enable=no-self-use
 
     @staticmethod
     def image_converter_url(image_url, width, height, color_depth=16):
@@ -534,6 +535,7 @@ class PyPortal:
             image_url,
         )
 
+    # pylint: disable=no-self-use
     def sd_check(self):
         """Returns True if there is an SD card present and False
         if there is no SD card. The _sdcard value is set in _init
@@ -557,9 +559,10 @@ class PyPortal:
             )
 
         # This may need a fake wrapper written to just use onboard eth0 or whatever
-        wifi = adafruit_esp32spi_wifimanager.ESPSPI_WiFiManager(
-            self._esp, secrets, None
-        )
+        # wifi = adafruit_esp32spi_wifimanager.ESPSPI_WiFiManager(
+        #    self._esp, secrets, None
+        # )
+        wifi = None
         io_client = IO_HTTP(aio_username, aio_key, wifi)
 
         while True:
@@ -583,6 +586,8 @@ class PyPortal:
                 print(feed_id["key"], data, exception)
                 continue
             break
+
+    # pylint: enable=no-self-use
 
     def fetch(self, refresh_url=None, timeout=10):
         """Fetch data from the url we initialized with, perfom any parsing,
@@ -744,10 +749,14 @@ class PyPortal:
             return values[0]
         return values
 
+    # pylint: disable=no-self-use
     def get_ip_address(self):
+        """Look up the IP address and return it"""
         return subprocess.check_output(
             "hostname -I | cut -d' ' -f1", shell=True
         ).decode("utf-8")
+
+    # pylint: enable=no-self-use
 
     def show_QR(
         self, qr_data, *, qr_size=1, x=0, y=0, hide_background=False
