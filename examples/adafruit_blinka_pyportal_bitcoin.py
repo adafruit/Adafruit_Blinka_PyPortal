@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
+#
+# SPDX-License-Identifier: Unlicense
 """
 This example will access the coindesk API, grab a number like bitcoin value in
 USD and display it on a screen
