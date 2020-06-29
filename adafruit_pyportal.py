@@ -31,6 +31,7 @@ import wget as wget_lib
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
+from PIL import Image
 
 try:
     from secrets import secrets  # pylint: disable=no-name-in-module
@@ -195,7 +196,6 @@ class PyPortal:
                 self.display.show(self.splash)
                 self.set_backlight(0)
                 self.set_background(bootscreen)
-                self.display.refresh(target_frames_per_second=60)
                 self.set_backlight(1)
             except OSError:
                 pass  # they removed it, skip!
@@ -308,7 +308,6 @@ class PyPortal:
         self._debug_print("Set background to", file_or_color)
         while self._bg_group:
             self._bg_group.pop()
-
         if not position:
             position = (0, 0)  # default in top corner
 
@@ -598,6 +597,31 @@ class PyPortal:
                 continue
             break
 
+    def resize_image(self, filename, width, height):
+        """Resize the image to be within the width and height while maintaining
+        proper scaling
+
+        param: str filename: The location of the image file to resize
+        param int width: The maximum width to resize to
+        param int height: The maximum height to resize to
+        """
+        # Open image
+        image = Image.open(filename)
+        image_ratio = image.width / image.height
+        target_ratio = width / height
+
+        # Resize with sample
+        if target_ratio < image_ratio:
+            scaled_width = image.width * height // image.height
+            scaled_height = height
+        else:
+            scaled_width = width
+            scaled_height = image.height * width // image.width
+        image = image.resize((scaled_width, scaled_height), Image.BICUBIC)
+
+        # Save to same filename
+        image.save(filename)
+
     # pylint: enable=no-self-use
 
     def fetch(self, refresh_url=None, timeout=10):
@@ -691,25 +715,14 @@ class PyPortal:
         if image_url:
             try:
                 print("original URL:", image_url)
-                if iwidth < iheight:
-                    image_url = self.image_converter_url(
-                        image_url,
-                        int(
-                            self._image_resize[1]
-                            * self._image_resize[1]
-                            / self._image_resize[0]
-                        ),
-                        self._image_resize[1],
-                    )
-                else:
-                    image_url = self.image_converter_url(
-                        image_url, self._image_resize[0], self._image_resize[1]
-                    )
-                print("convert URL:", image_url)
                 # convert image to bitmap and cache
                 # print("**not actually wgetting**")
                 filename = "cache.bmp"
                 self.wget(image_url, filename)
+                self.resize_image(
+                    filename, self._image_resize[0], self._image_resize[1]
+                )
+
                 if iwidth < iheight:
                     pwidth = int(
                         self._image_resize[1]

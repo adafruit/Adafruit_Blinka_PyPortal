@@ -28,11 +28,13 @@ display_bus = displayio.FourWire(spi, command=tft_dc, chip_select=tft_cs)
 display = adafruit_ili9341.ILI9341(display_bus, width=320, height=240)
 
 board.TFT_BACKLIGHT = board.D26
-# You can display in 'GBP', 'EUR' or 'USD'
-CURRENCY = "USD"
+
 # Set up where we'll be fetching data from
-DATA_SOURCE = "https://api.coindesk.com/v1/bpi/currentprice.json"
-DATA_LOCATION = ["bpi", CURRENCY, "rate_float"]
+DATA_SOURCE = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY"
+# There's a few different places we look for data in the photo of the day
+IMAGE_LOCATION = ["url"]
+TITLE_LOCATION = ["title"]
+DATE_LOCATION = ["date"]
 
 
 def text_transform(val):
@@ -49,23 +51,25 @@ def text_transform(val):
 cwd = os.path.dirname(os.path.realpath(__file__))
 pyportal = PyPortal(
     url=DATA_SOURCE,
-    json_path=DATA_LOCATION,
+    json_path=(TITLE_LOCATION, DATE_LOCATION),
     display=display,
     touchscreen=touchscreen,
-    default_bg=cwd + "/bitcoin_background.bmp",
-    text_font=cwd + "/fonts/Arial-Bold-24-Complete.bdf",
-    text_position=(195, 130),
-    text_color=0x0,
-    text_transform=text_transform,
+    default_bg=cwd + "/nasa_background.bmp",
+    text_font=cwd + "/fonts/Arial-12.bdf",
+    text_position=((5, 220), (5, 200)),
+    text_color=(0xFFFFFF, 0xFFFFFF),
+    text_maxlen=(50, 50),  # cut off characters
+    image_json_path=IMAGE_LOCATION,
+    image_resize=(320, 240),
+    image_position=(0, 0),
 )
-pyportal.preload_font(b"$012345789")  # preload numbers
-pyportal.preload_font((0x00A3, 0x20AC))  # preload gbp/euro symbol
 
 while True:
+    response = None
     try:
-        value = pyportal.fetch()
-        print("Response is", value)
-    except (ValueError, RuntimeError) as e:
+        response = pyportal.fetch()
+        print("Response is", response)
+    except RuntimeError as e:
         print("Some error occured, retrying! -", e)
 
-    time.sleep(3 * 60)  # wait 3 minutes
+    time.sleep(30 * 60)  # 30 minutes till next check

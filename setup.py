@@ -41,6 +41,7 @@ setup(
         "adafruit-circuitpython-bitmap-font",
         "adafruit-circuitpython-display-text",
         "adafruit-circuitpython-adafruitio",
+        "pillow",
         "wget",
     ],
     # Choose your license
