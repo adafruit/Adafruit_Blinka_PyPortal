@@ -36,17 +36,6 @@ IMAGE_LOCATION = ["url"]
 TITLE_LOCATION = ["title"]
 DATE_LOCATION = ["date"]
 
-
-def text_transform(val):
-    if CURRENCY == "USD":
-        return "$%d" % val
-    if CURRENCY == "EUR":
-        return "‎€%d" % val
-    if CURRENCY == "GBP":
-        return "£%d" % val
-    return "%d" % val
-
-
 # the current working directory (where this file is)
 cwd = os.path.dirname(os.path.realpath(__file__))
 pyportal = PyPortal(
