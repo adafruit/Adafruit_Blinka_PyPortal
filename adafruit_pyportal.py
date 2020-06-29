@@ -74,6 +74,7 @@ class Fake_Requests:
 
 class PyPortal:
     """Class representing the Adafruit PyPortal.
+
     :param url: The URL of your data source. Defaults to ``None``.
     :param headers: The headers for authentication, typically used by Azure API's.
     :param json_path: The list of json traversal to get data out of. Can be list of lists for
@@ -111,10 +112,11 @@ class PyPortal:
                              Defaults to ``None``.
     :param caption_color: The color of your caption. Must be a hex value, e.g. ``0x808000``.
     :param image_url_path: The HTTP traversal path for a background image to display.
-                             Defaults to ``None``.
+                           Defaults to ``None``.
     :param debug: Turn on debug print outs. Defaults to False.
     :param display: The displayio display object to use
     :param touchscreen: The touchscreen object to use. Usually STMPE610 or FocalTouch.
+
     """
 
     # pylint: disable=too-many-instance-attributes, too-many-locals, too-many-branches, too-many-statements
