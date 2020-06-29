@@ -295,12 +295,14 @@ class PyPortal:
 
     def set_headers(self, headers):
         """Set the headers used by fetch().
+
         :param headers: The new header dictionary
         """
         self._headers = headers
 
     def set_background(self, file_or_color, position=None):
         """The background image to a bitmap file.
+
         :param file_or_color: The filename of the chosen background image, or a hex color.
         """
         self._debug_print("Set background to", file_or_color)
@@ -339,6 +341,7 @@ class PyPortal:
 
     def set_backlight(self, val):
         """Adjust the TFT backlight.
+
         :param val: The backlight brightness. Use a value between ``0`` and ``1``, where ``0`` is
                     off, and ``1`` is 100% brightness.
         """
@@ -348,6 +351,7 @@ class PyPortal:
     def preload_font(self, glyphs=None):
         # pylint: disable=line-too-long
         """Preload font.
+
         :param glyphs: The font glyphs to load. Defaults to ``None``, uses alphanumeric glyphs if
                        None.
         """
@@ -361,6 +365,7 @@ class PyPortal:
     def set_caption(self, caption_text, caption_position, caption_color):
         # pylint: disable=line-too-long
         """A caption. Requires setting ``caption_font`` in init!
+
         :param caption_text: The text of the caption.
         :param caption_position: The position of the caption text.
         :param caption_color: The color of your caption text. Must be a hex value, e.g.
@@ -391,6 +396,7 @@ class PyPortal:
 
     def set_text(self, val, index=0):
         """Display text, with indexing into our list of text boxes.
+
         :param str val: The text to be displayed
         :param index: Defaults to 0.
         """
@@ -427,6 +433,7 @@ class PyPortal:
 
     def neo_status(self, value):
         """The status NeoPixel.
+
         :param value: The color to change the NeoPixel.
         """
         if self.neopix:
@@ -434,6 +441,7 @@ class PyPortal:
 
     def play_file(self, file_name, wait_to_finish=True):
         """Play a wav file.
+
         :param str file_name: The name of the wav file to play on the speaker.
         """
         self._debug_print("Playing audio file", file_name)
@@ -453,6 +461,7 @@ class PyPortal:
     def get_local_time(self, location=None):
         # pylint: disable=line-too-long
         """Fetch and "set" the local time of this microcontroller to the local time at the location, using an internet time API.
+
         :param str location: Your city and country, e.g. ``"New York, US"``.
         """
         # pylint: enable=line-too-long
@@ -505,6 +514,7 @@ class PyPortal:
     # pylint: disable=no-self-use
     def wget(self, url, filename):
         """Download a url and save to filename location, like the command wget.
+
         :param url: The URL from which to obtain the data.
         :param filename: The name of the file to save the data to.
         """
@@ -545,6 +555,7 @@ class PyPortal:
     def push_to_io(self, feed_key, data):
         # pylint: disable=line-too-long
         """Push data to an adafruit.io feed
+
         :param str feed_key: Name of feed key to push data to.
         :param data: data to send to feed
         """
@@ -762,6 +773,7 @@ class PyPortal:
         self, qr_data, *, qr_size=1, x=0, y=0, hide_background=False
     ):  # pylint: disable=invalid-name
         """Display a QR code on the TFT
+
         :param qr_data: The data for the QR code.
         :param int qr_size: The scale of the QR code.
         :param x: The x position of upper left corner of the QR code on the display.
@@ -827,6 +839,7 @@ class PyPortal:
     @staticmethod
     def wrap_nicely(string, max_chars):
         """A helper that will return a list of lines with word-break wrapping.
+
         :param str string: The text to be wrapped.
         :param int max_chars: The maximum number of characters on a line before wrapping.
         """
