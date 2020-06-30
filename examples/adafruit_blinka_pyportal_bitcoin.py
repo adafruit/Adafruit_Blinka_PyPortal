@@ -5,8 +5,10 @@
 This example will access the coindesk API, grab a number like bitcoin value in
 USD and display it on a screen
 If you can find something that spits out JSON data, we can display it!
+
+You can find any resources in the associated Learn Guide at:
+https://learn.adafruit.com/pyportal-bitcoin-value-display
 """
-import os
 import time
 from adafruit_pyportal import PyPortal
 
@@ -28,7 +30,11 @@ def text_transform(val):
 
 
 # the current working directory (where this file is)
-cwd = os.path.dirname(os.path.realpath(__file__))
+try:
+    cwd = os.path.dirname(os.path.realpath(__file__))
+except AttributeError:
+    cwd = ("/" + __file__).rsplit("/", 1)[0]
+
 pyportal = PyPortal(
     url=DATA_SOURCE,
     json_path=DATA_LOCATION,

@@ -1,7 +1,10 @@
 # SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 #
 # SPDX-License-Identifier: Unlicense
-import os
+"""
+You can find any resources in the associated Learn Guide at:
+https://learn.adafruit.com/pyportal-nasa-image-of-the-day-viewer
+"""
 import time
 from adafruit_pyportal import PyPortal
 
@@ -13,7 +16,11 @@ TITLE_LOCATION = ["title"]
 DATE_LOCATION = ["date"]
 
 # the current working directory (where this file is)
-cwd = os.path.dirname(os.path.realpath(__file__))
+try:
+    cwd = os.path.dirname(os.path.realpath(__file__))
+except AttributeError:
+    cwd = ("/" + __file__).rsplit("/", 1)[0]
+
 pyportal = PyPortal(
     url=DATA_SOURCE,
     json_path=(TITLE_LOCATION, DATE_LOCATION),
