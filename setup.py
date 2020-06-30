@@ -37,6 +37,7 @@ setup(
     install_requires=[
         "Adafruit-Blinka",
         "adafruit-blinka-displayio",
+        "adafruit-circuitpython-ili9341",
         "adafruit-circuitpython-stmpe610",
         "adafruit-circuitpython-focaltouch",
         "adafruit-circuitpython-bitmap-font",
