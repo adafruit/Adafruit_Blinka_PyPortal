@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: Unlicense
 import os
 import time
-import board
 from adafruit_pyportal import PyPortal
 
 # Set up where we'll be fetching data from

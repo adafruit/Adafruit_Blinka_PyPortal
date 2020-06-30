@@ -8,7 +8,6 @@ If you can find something that spits out JSON data, we can display it!
 """
 import os
 import time
-import board
 from adafruit_pyportal import PyPortal
 
 # You can display in 'GBP', 'EUR' or 'USD'
