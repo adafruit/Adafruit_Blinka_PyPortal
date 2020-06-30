@@ -26,12 +26,17 @@ import time
 import gc
 import subprocess
 import requests
+import board
+import digitalio
 import displayio
 import wget as wget_lib
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
+from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 from PIL import Image
+import adafruit_focaltouch
+import adafruit_ili9341
 
 try:
     from secrets import secrets  # pylint: disable=no-name-in-module
@@ -114,6 +119,7 @@ class PyPortal:
     :param caption_color: The color of your caption. Must be a hex value, e.g. ``0x808000``.
     :param image_url_path: The HTTP traversal path for a background image to display.
                            Defaults to ``None``.
+    :param busio.SPI external_spi: A previously declared spi object. Defaults to ``None``.
     :param debug: Turn on debug print outs. Defaults to False.
     :param display: The displayio display object to use
     :param touchscreen: The touchscreen object to use. Usually STMPE610 or FocalTouch.
@@ -146,6 +152,7 @@ class PyPortal:
         caption_color=0x808080,
         image_url_path=None,
         success_callback=None,
+        external_spi=None,
         debug=False,
         display=None,
         touchscreen=None
@@ -153,10 +160,22 @@ class PyPortal:
 
         self._debug = debug
         self._debug_start = time.monotonic()
-
-        if display is None:
-            raise RuntimeError("Display must be provided")
         self.display = display
+
+        if external_spi:  # If SPI Object Passed
+            spi = external_spi
+        else:  # Else: Make ESP32 connection
+            spi = board.SPI()
+
+        if self.display is None:
+            display_bus = displayio.FourWire(
+                spi, command=board.D25, chip_select=board.CE0
+            )
+            self.display = adafruit_ili9341.ILI9341(display_bus, width=320, height=240)
+
+        if self.display is None:
+            raise RuntimeError("Display not found or provided")
+        # self.set_backlight(1.0)  # turn on backlight
 
         self._url = url
         self._headers = headers
@@ -283,13 +302,28 @@ class PyPortal:
                     self.display.height,
                 )  # default to full screen
 
-        if touchscreen is not None:
-            self._debug_print("Init touchscreen")
-            self.touchscreen = touchscreen
-
-            self.set_backlight(1.0)  # turn on backlight
-        else:
+        self._debug_print("Init touchscreen")
+        self.touchscreen = touchscreen
+        # Attempt to Init STMPE610
+        if self.touchscreen is None:
+            self._debug_print("Attempting to initialize STMPE610...")
+            try:
+                chip_select = digitalio.DigitalInOut(board.CE1)
+                self.touchscreen = Adafruit_STMPE610_SPI(spi, chip_select)
+            except RuntimeError:
+                self._debug_print("None Found")
+        # Attempt to Init FocalTouch
+        if self.touchscreen is None:
+            self._debug_print("Attempting to initialize Focal Touch...")
+            try:
+                i2c = board.I2C()
+                self.touchscreen = adafruit_focaltouch.Adafruit_FocalTouch(i2c)
+            except (OSError, ValueError):
+                self._debug_print("None Found")
+        if self.touchscreen is None:
             raise AttributeError("PyPortal module requires a touchscreen.")
+
+        self.set_backlight(1.0)  # turn on backlight
 
         gc.collect()
 
