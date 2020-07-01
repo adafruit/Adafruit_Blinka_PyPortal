@@ -1,6 +1,10 @@
 # SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 #
 # SPDX-License-Identifier: Unlicense
+"""
+You can find any resources in the associated Learn Guide at:
+https://learn.adafruit.com/pyportal-adafruit-quote-board
+"""
 import os
 import time
 from adafruit_pyportal import PyPortal
@@ -11,7 +15,11 @@ QUOTE_LOCATION = [0, "text"]
 AUTHOR_LOCATION = [0, "author"]
 
 # the current working directory (where this file is)
-cwd = os.path.dirname(os.path.realpath(__file__))
+try:
+    cwd = os.path.dirname(os.path.realpath(__file__))
+except AttributeError:
+    cwd = ("/" + __file__).rsplit("/", 1)[0]
+
 pyportal = PyPortal(
     url=DATA_SOURCE,
     json_path=(QUOTE_LOCATION, AUTHOR_LOCATION),
