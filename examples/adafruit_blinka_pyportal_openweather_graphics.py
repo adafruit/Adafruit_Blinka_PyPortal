@@ -22,7 +22,7 @@ small_font = cwd + "/fonts/Arial-12.bdf"
 medium_font = cwd + "/fonts/Arial-16.bdf"
 large_font = cwd + "/fonts/Arial-Bold-24.bdf"
 
-
+# pylint: disable=too-many-instance-attributes
 class OpenWeather_Graphics(displayio.Group):
     def __init__(self, root_group, *, am_pm=True, celsius=True):
         super().__init__(max_size=2)
@@ -142,12 +142,7 @@ class OpenWeather_Graphics(displayio.Group):
             self._icon_file.close()
         self._icon_file = open(filename, "rb")
         icon = displayio.OnDiskBitmap(self._icon_file)
-        try:
-            self._icon_sprite = displayio.TileGrid(
-                icon, pixel_shader=displayio.ColorConverter()
-            )
-        except TypeError:
-            self._icon_sprite = displayio.TileGrid(
-                icon, pixel_shader=displayio.ColorConverter(), position=(0, 0)
-            )
+        self._icon_sprite = displayio.TileGrid(
+            icon, pixel_shader=displayio.ColorConverter()
+        )
         self._icon_group.append(self._icon_sprite)

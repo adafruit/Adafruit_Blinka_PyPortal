@@ -5,6 +5,7 @@
 You can find any resources in the associated Learn Guide at:
 https://learn.adafruit.com/pyportal-nasa-image-of-the-day-viewer
 """
+import os
 import time
 from adafruit_pyportal import PyPortal
 

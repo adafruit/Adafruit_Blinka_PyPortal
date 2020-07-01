@@ -12,7 +12,6 @@ https://learn.adafruit.com/pyportal-weather-station
 import os
 import sys
 import time
-import board
 from adafruit_pyportal import PyPortal
 import adafruit_blinka_pyportal_openweather_graphics as openweather_graphics
 
@@ -21,6 +20,8 @@ try:
     cwd = os.path.dirname(os.path.realpath(__file__))
 except AttributeError:
     cwd = ("/" + __file__).rsplit("/", 1)[0]
+
+sys.path.append(cwd)
 
 # Get wifi details and more from a secrets.py file
 try:

@@ -9,6 +9,7 @@ If you can find something that spits out JSON data, we can display it!
 You can find any resources in the associated Learn Guide at:
 https://learn.adafruit.com/pyportal-bitcoin-value-display
 """
+import os
 import time
 from adafruit_pyportal import PyPortal
 

@@ -12,7 +12,6 @@ https://learn.adafruit.com/pyportal-discord-online-count
 """
 import os
 import time
-import board
 from adafruit_pyportal import PyPortal
 
 # Set up where we'll be fetching data from
@@ -24,6 +23,7 @@ try:
     cwd = os.path.dirname(os.path.realpath(__file__))
 except AttributeError:
     cwd = ("/" + __file__).rsplit("/", 1)[0]
+
 pyportal = PyPortal(
     url=DATA_SOURCE,
     regexp_path=DATA_LOCATION,
