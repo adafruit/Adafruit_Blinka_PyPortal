@@ -35,6 +35,7 @@ from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
 from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 from PIL import Image
+import neopixel
 import adafruit_focaltouch
 import adafruit_ili9341
 
@@ -90,6 +91,8 @@ class PyPortal:
                         use regexp.
     :param default_bg: The path to your default background image file or a hex color.
                        Defaults to 0x000000.
+    :param status_neopixel: The pin for the status NeoPixel. Use ``board.NEOPIXEL`` for the on-board
+                            NeoPixel. Defaults to ``None``, no status LED
     :param str text_font: The path to your font file for your data text display.
     :param text_position: The position of your extracted text on the display in an (x, y) tuple.
                           Can be a list of tuples for when there's a list of json_paths, for example
@@ -135,6 +138,7 @@ class PyPortal:
         json_path=None,
         regexp_path=None,
         default_bg=0x000000,
+        status_neopixel=None,
         text_font=None,
         text_position=None,
         text_color=0x808080,
@@ -190,8 +194,13 @@ class PyPortal:
         self._regexp_path = regexp_path
         self._success_callback = success_callback
 
-        self.neopix = None
-        self._audio_device = 1
+        if status_neopixel:
+            self.neopix = neopixel.NeoPixel(status_neopixel, 1, brightness=0.2)
+        else:
+            self.neopix = None
+        self.neo_status(0)
+
+        self.audio_device = 1
 
         try:
             os.stat(LOCALFILE)
@@ -478,7 +487,7 @@ class PyPortal:
         :param str file_name: The name of the wav file to play on the speaker.
         """
         self._debug_print("Playing audio file", file_name)
-        os.system("aplay -Dhw:" + str(self._audio_device) + ",0 " + file_name)
+        os.system("aplay -Dhw:" + str(self.audio_device) + ",0 " + file_name)
         if not wait_to_finish:
             # To do: Add threading support
             print("Immediately returning not currently supported.")
@@ -552,7 +561,9 @@ class PyPortal:
         :param filename: The name of the file to save the data to.
         """
         print("Fetching stream from", url)
+        self.neo_status((100, 100, 0))
         wget_lib.download(url, filename)
+        self.neo_status((0, 0, 0))
 
     # pylint: enable=no-self-use
 
@@ -680,9 +691,11 @@ class PyPortal:
         if not r:
             # great, lets get the data
             print("Retrieving data...", end="")
+            self.neo_status((100, 100, 0))  # yellow = fetching data
             gc.collect()
             r = requests.get(self._url, headers=self._headers, timeout=timeout)
             gc.collect()
+            self.neo_status((0, 0, 100))  # green = got data
             print("Reply is OK!")
 
         self._debug_print(r.text)
