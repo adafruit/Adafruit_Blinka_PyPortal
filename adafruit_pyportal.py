@@ -35,7 +35,6 @@ from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
 from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 from PIL import Image
-import neopixel
 import adafruit_focaltouch
 import adafruit_ili9341
 
@@ -166,20 +165,22 @@ class PyPortal:
         self._debug_start = time.monotonic()
         self.display = display
 
-        if external_spi:  # If SPI Object Passed
-            spi = external_spi
-        else:  # Else: Make ESP32 connection
-            spi = board.SPI()
-
         if self.display is None:
+            if external_spi:  # If SPI Object Passed
+                spi = external_spi
+            else:  # Else: Make ESP32 connection
+                spi = board.SPI()
+
             display_bus = displayio.FourWire(
                 spi, command=board.D25, chip_select=board.CE0
             )
-            self.display = adafruit_ili9341.ILI9341(display_bus, width=320, height=240)
+            self.display = adafruit_ili9341.ILI9341(
+                display_bus, width=320, height=240, backlight_pin=board.D18
+            )
 
         if self.display is None:
             raise RuntimeError("Display not found or provided")
-        # self.set_backlight(1.0)  # turn on backlight
+        self.set_backlight(1.0)  # turn on backlight
 
         self._url = url
         self._headers = headers
@@ -195,6 +196,8 @@ class PyPortal:
         self._success_callback = success_callback
 
         if status_neopixel:
+            import neopixel  # pylint: disable=import-outside-toplevel
+
             self.neopix = neopixel.NeoPixel(status_neopixel, 1, brightness=0.2)
         else:
             self.neopix = None
@@ -313,24 +316,23 @@ class PyPortal:
 
         self._debug_print("Init touchscreen")
         self.touchscreen = touchscreen
-        # Attempt to Init STMPE610
-        if self.touchscreen is None:
-            self._debug_print("Attempting to initialize STMPE610...")
-            try:
-                chip_select = digitalio.DigitalInOut(board.CE1)
-                self.touchscreen = Adafruit_STMPE610_SPI(spi, chip_select)
-            except RuntimeError:
-                self._debug_print("None Found")
-        # Attempt to Init FocalTouch
-        if self.touchscreen is None:
-            self._debug_print("Attempting to initialize Focal Touch...")
-            try:
-                i2c = board.I2C()
-                self.touchscreen = adafruit_focaltouch.Adafruit_FocalTouch(i2c)
-            except (OSError, ValueError):
-                self._debug_print("None Found")
-        if self.touchscreen is None:
-            raise AttributeError("PyPortal module requires a touchscreen.")
+        if spi is not None:
+            # Attempt to Init STMPE610
+            if self.touchscreen is None:
+                self._debug_print("Attempting to initialize STMPE610...")
+                try:
+                    chip_select = digitalio.DigitalInOut(board.CE1)
+                    self.touchscreen = Adafruit_STMPE610_SPI(spi, chip_select)
+                except (RuntimeError, AttributeError):
+                    self._debug_print("None Found")
+            # Attempt to Init FocalTouch
+            if self.touchscreen is None:
+                self._debug_print("Attempting to initialize Focal Touch...")
+                try:
+                    i2c = board.I2C()
+                    self.touchscreen = adafruit_focaltouch.Adafruit_FocalTouch(i2c)
+                except Exception:  # pylint: disable=broad-except
+                    self._debug_print("None Found")
 
         self.set_backlight(1.0)  # turn on backlight
 
@@ -469,6 +471,11 @@ class PyPortal:
                 self._debug_print("Making text area with string:", string)
                 self._text[index] = Label(self._text_font, text=string)
                 self._text[index].color = self._text_color[index]
+                print(
+                    "Position:",
+                    self._text_position[index][0],
+                    self._text_position[index][1],
+                )
                 self._text[index].x = self._text_position[index][0]
                 self._text[index].y = self._text_position[index][1]
                 self.splash.append(self._text[index])
