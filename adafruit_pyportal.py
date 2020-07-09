@@ -165,6 +165,8 @@ class PyPortal:
         self._debug_start = time.monotonic()
         self.display = display
 
+        spi = None
+
         if self.display is None:
             if external_spi:  # If SPI Object Passed
                 spi = external_spi
@@ -471,11 +473,6 @@ class PyPortal:
                 self._debug_print("Making text area with string:", string)
                 self._text[index] = Label(self._text_font, text=string)
                 self._text[index].color = self._text_color[index]
-                print(
-                    "Position:",
-                    self._text_position[index][0],
-                    self._text_position[index][1],
-                )
                 self._text[index].x = self._text_position[index][0]
                 self._text[index].y = self._text_position[index][1]
                 self.splash.append(self._text[index])
@@ -700,7 +697,12 @@ class PyPortal:
             print("Retrieving data...", end="")
             self.neo_status((100, 100, 0))  # yellow = fetching data
             gc.collect()
-            r = requests.get(self._url, headers=self._headers, timeout=timeout)
+            try:
+                r = requests.get(self._url, headers=self._headers, timeout=timeout)
+            except Exception:  # pylint: disable=broad-except
+                print("Error: Read timed out.")
+                raise
+
             gc.collect()
             self.neo_status((0, 0, 100))  # green = got data
             print("Reply is OK!")
