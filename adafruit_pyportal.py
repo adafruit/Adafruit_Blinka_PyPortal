@@ -41,7 +41,7 @@ import adafruit_ili9341
 try:
     from secrets import secrets  # pylint: disable=no-name-in-module
 except RuntimeError:
-    raise "API tokens are kept in secrets.py, please add them there!"
+    raise "API tokens are kept in secrets.py, please add them there!" from RuntimeError
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_pyportal.git"
@@ -518,7 +518,7 @@ class PyPortal:
         except KeyError:
             raise KeyError(
                 "\n\nOur time service requires a login/password to rate-limit. Please register for a free adafruit.io account and place the user/key in your secrets file under 'aio_username' and 'aio_key'"  # pylint: disable=line-too-long
-            )
+            ) from KeyError
 
         location = secrets.get("timezone", location)
         if location:
@@ -543,7 +543,7 @@ class PyPortal:
         except KeyError:
             raise KeyError(
                 "Was unable to lookup the time, try setting secrets['timezone'] according to http://worldtimeapi.org/timezones"  # pylint: disable=line-too-long
-            )
+            ) from KeyError
         year, month, mday = [int(x) for x in the_date.split("-")]
         the_time = the_time.split(".")[0]
         hours, minutes, seconds = [int(x) for x in the_time.split(":")]
@@ -582,7 +582,7 @@ class PyPortal:
         except KeyError:
             raise KeyError(
                 "\n\nOur image converter service require a login/password to rate-limit. Please register for a free adafruit.io account and place the user/key in your secrets file under 'aio_username' and 'aio_key'"  # pylint: disable=line-too-long
-            )
+            ) from KeyError
 
         return IMAGE_CONVERTER_SERVICE % (
             aio_username,
@@ -615,7 +615,7 @@ class PyPortal:
         except KeyError:
             raise KeyError(
                 "Adafruit IO secrets are kept in secrets.py, please add them there!\n\n"
-            )
+            ) from KeyError
 
         # This may need a fake wrapper written to just use onboard eth0 or whatever
         # wifi = adafruit_esp32spi_wifimanager.ESPSPI_WiFiManager(

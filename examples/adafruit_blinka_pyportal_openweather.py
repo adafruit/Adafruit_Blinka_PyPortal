@@ -12,8 +12,8 @@ https://learn.adafruit.com/pyportal-weather-station
 import os
 import sys
 import time
-from adafruit_pyportal import PyPortal
 import adafruit_blinka_pyportal_openweather_graphics as openweather_graphics
+from adafruit_pyportal import PyPortal
 
 # the current working directory (where this file is)
 try:
