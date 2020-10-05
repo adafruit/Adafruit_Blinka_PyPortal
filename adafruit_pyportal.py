@@ -707,11 +707,13 @@ class PyPortal:
             self.neo_status((0, 0, 100))  # green = got data
             print("Reply is OK!")
 
-        self._debug_print(r.text)
+        if not self._image_json_path and not self._json_path:
+            self._debug_print(r.text)
 
         if self._image_json_path or self._json_path:
             try:
                 json_out = r.json()
+                self._debug_print(json_out)
             except ValueError:  # failed to parse?
                 print("Couldn't parse json: ", r.text)
                 raise
