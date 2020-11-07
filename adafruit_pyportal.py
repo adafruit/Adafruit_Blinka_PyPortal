@@ -26,7 +26,11 @@ import time
 import gc
 import subprocess
 import requests
-import board
+try:
+    import board
+except NotImplementedError:
+    # okay to run Generic Linux
+    pass
 import digitalio
 import displayio
 import wget as wget_lib
@@ -37,11 +41,6 @@ from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 from PIL import Image
 import adafruit_focaltouch
 import adafruit_ili9341
-
-try:
-    from secrets import secrets  # pylint: disable=no-name-in-module
-except RuntimeError:
-    raise "API tokens are kept in secrets.py, please add them there!" from RuntimeError
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_pyportal.git"
@@ -158,8 +157,18 @@ class PyPortal:
         external_spi=None,
         debug=False,
         display=None,
-        touchscreen=None
+        touchscreen=None,
+        secrets=None
     ):
+
+        if not secrets:
+            try:
+                from secrets import secrets  # pylint: disable=no-name-in-module
+            except RuntimeError:
+                raise "API tokens are kept in secrets.py, please add them there!" from RuntimeError
+            self.secrets = secrets
+        else:
+            self.secrets = secrets
 
         self._debug = debug
         self._debug_start = time.monotonic()
@@ -513,14 +522,14 @@ class PyPortal:
         # pylint: enable=line-too-long
         api_url = None
         try:
-            aio_username = secrets["aio_username"]
-            aio_key = secrets["aio_key"]
+            aio_username = self.secrets["aio_username"]
+            aio_key = self.secrets["aio_key"]
         except KeyError:
             raise KeyError(
                 "\n\nOur time service requires a login/password to rate-limit. Please register for a free adafruit.io account and place the user/key in your secrets file under 'aio_username' and 'aio_key'"  # pylint: disable=line-too-long
             ) from KeyError
 
-        location = secrets.get("timezone", location)
+        location = self.secrets.get("timezone", location)
         if location:
             print("Getting time for timezone", location)
             api_url = (TIME_SERVICE + "&tz=%s") % (aio_username, aio_key, location)
@@ -610,8 +619,8 @@ class PyPortal:
         # pylint: enable=line-too-long
 
         try:
-            aio_username = secrets["aio_username"]
-            aio_key = secrets["aio_key"]
+            aio_username = self.secrets["aio_username"]
+            aio_key = self.secrets["aio_key"]
         except KeyError:
             raise KeyError(
                 "Adafruit IO secrets are kept in secrets.py, please add them there!\n\n"
