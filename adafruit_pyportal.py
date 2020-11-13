@@ -125,6 +125,7 @@ class PyPortal:
     :param debug: Turn on debug print outs. Defaults to False.
     :param display: The displayio display object to use
     :param touchscreen: The touchscreen object to use. Usually STMPE610 or FocalTouch.
+    :param secrets: The secrets object to use. If not supplied we will attempt to import.
 
     """
 
