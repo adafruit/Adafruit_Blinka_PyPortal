@@ -29,11 +29,11 @@ import requests
 
 try:
     import board
-    _display_arg_required = False
+
+    DISPLAY_ARG_REQUIRED = False
 except NotImplementedError:
     # okay to run Generic Linux
-    _display_arg_required = True
-    pass
+    DISPLAY_ARG_REQUIRED = True
 import digitalio
 import displayio
 import wget as wget_lib
@@ -182,8 +182,10 @@ class PyPortal:
         spi = None
 
         if self.display is None:
-            if _display_arg_required:
-                raise RuntimeError("Display must be provided on platforms without board.")
+            if DISPLAY_ARG_REQUIRED:
+                raise RuntimeError(
+                    "Display must be provided on platforms without board."
+                )
             if external_spi:  # If SPI Object Passed
                 spi = external_spi
             else:  # Else: Make ESP32 connection
