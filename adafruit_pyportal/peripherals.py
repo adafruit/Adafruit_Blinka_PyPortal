@@ -35,9 +35,7 @@ class Peripherals:
     """Peripherals Helper Class for the PyPortal Library"""
 
     # pylint: disable=too-many-arguments
-    def __init__(
-        self, spi, display, touchscreen=None, audio_device=1, debug=False
-    ):
+    def __init__(self, spi, display, touchscreen=None, audio_device=1, debug=False):
         self._display = display
 
         self._audio_device = audio_device

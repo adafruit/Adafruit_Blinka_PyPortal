@@ -83,10 +83,7 @@ class Network(NetworkBase):
         wifi = WiFi(status_neopixel=status_neopixel)
 
         super().__init__(
-            wifi,
-            extract_values=extract_values,
-            secrets_data=secrets_data,
-            debug=debug,
+            wifi, extract_values=extract_values, secrets_data=secrets_data, debug=debug,
         )
 
         self._convert_image = convert_image
