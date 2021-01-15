@@ -395,7 +395,10 @@ class PyPortal:
             color_palette = displayio.Palette(1)
             color_palette[0] = file_or_color
             self._bg_sprite = displayio.TileGrid(
-                color_bitmap, pixel_shader=color_palette, x=position[0], y=position[1],
+                color_bitmap,
+                pixel_shader=color_palette,
+                x=position[0],
+                y=position[1],
             )
         else:
             raise RuntimeError("Unknown type of background")
@@ -591,8 +594,8 @@ class PyPortal:
 
     def image_converter_url(self, image_url, width, height, color_depth=16):
         """Generate a converted image url from the url passed in,
-           with the given width and height. aio_username and aio_key must be
-           set in secrets."""
+        with the given width and height. aio_username and aio_key must be
+        set in secrets."""
         try:
             aio_username = self.secrets["aio_username"]
             aio_key = self.secrets["aio_key"]
@@ -912,8 +915,7 @@ class PyPortal:
         self._qr_only = hide_background
 
     def hide_QR(self):  # pylint: disable=invalid-name
-        """Clear any QR codes that are currently on the screen
-        """
+        """Clear any QR codes that are currently on the screen"""
 
         if self._qr_only:
             self.display.show(self.splash)
