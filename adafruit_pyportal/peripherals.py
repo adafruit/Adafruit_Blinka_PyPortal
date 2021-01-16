@@ -22,7 +22,11 @@ Implementation Notes
 
 import os
 import gc
-import board
+
+try:
+    import board
+except NotImplementedError:
+    pass
 from digitalio import DigitalInOut
 from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 import adafruit_focaltouch

@@ -22,7 +22,11 @@ Implementation Notes
 import os
 import gc
 import time
-import board
+
+try:
+    import board
+except NotImplementedError:
+    pass
 import terminalio
 from adafruit_portalbase import PortalBase
 from adafruit_pyportal.network import Network, CONTENT_JSON, CONTENT_TEXT
