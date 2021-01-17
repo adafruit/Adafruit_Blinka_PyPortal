@@ -25,7 +25,7 @@ import time
 
 try:
     import board
-except NotImplementedError:
+except AttributeError:
     pass
 import terminalio
 from adafruit_portalbase import PortalBase

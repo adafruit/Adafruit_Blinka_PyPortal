@@ -21,7 +21,10 @@ Implementation Notes
 
 import gc
 import subprocess
-import neopixel
+try:
+    import neopixel
+except NotImplementedError:
+    pass
 import requests
 
 __version__ = "0.0.0-auto.0"

@@ -23,7 +23,7 @@ try:
     import board
 
     DISPLAY_ARG_REQUIRED = False
-except NotImplementedError:
+except AttributeError:
     # okay to run Generic Linux
     DISPLAY_ARG_REQUIRED = True
 

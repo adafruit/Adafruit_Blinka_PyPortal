@@ -25,7 +25,7 @@ import gc
 
 try:
     import board
-except NotImplementedError:
+except AttributeError:
     pass
 from digitalio import DigitalInOut
 from adafruit_stmpe610 import Adafruit_STMPE610_SPI
@@ -53,7 +53,7 @@ class Peripherals:
                 try:
                     chip_select = DigitalInOut(board.CE1)
                     self.touchscreen = Adafruit_STMPE610_SPI(spi, chip_select)
-                except (RuntimeError, AttributeError):
+                except (RuntimeError, AttributeError, NameError):
                     if debug:
                         print("None Found")
             # Attempt to Init FocalTouch
