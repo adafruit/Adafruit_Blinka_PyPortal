@@ -37,6 +37,7 @@ setup(
     install_requires=[
         "Adafruit-Blinka",
         "adafruit-blinka-displayio",
+        "adafruit-circuitpython-portalbase",
         "adafruit-circuitpython-ili9341",
         "adafruit-circuitpython-stmpe610",
         "adafruit-circuitpython-focaltouch",
@@ -65,7 +66,5 @@ setup(
     "neetwork",
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    # TODO: IF LIBRARY FILES ARE A PACKAGE FOLDER,
-    #       CHANGE `py_modules=['...']` TO `packages=['...']`
-    py_modules=["adafruit_pyportal"],
+    packages=["adafruit_pyportal"],
 )

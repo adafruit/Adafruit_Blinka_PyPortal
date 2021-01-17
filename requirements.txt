@@ -5,6 +5,7 @@
 
 Adafruit-Blinka
 adafruit-blinka-displayio
+Adafruit-circuitpython-portalbase
 adafruit-circuitpython-ili9341
 adafruit-circuitpython-stmpe610
 adafruit-circuitpython-focaltouch
