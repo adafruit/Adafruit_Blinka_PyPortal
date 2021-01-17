@@ -21,6 +21,7 @@ Implementation Notes
 
 import gc
 import subprocess
+
 try:
     import neopixel
 except NotImplementedError:
