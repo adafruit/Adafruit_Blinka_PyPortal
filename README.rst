@@ -19,7 +19,7 @@ Introduction
 
 A port of the PyPortal library intended to run on Blinka in CPython. This library will
 not work with CircuitPython. If you want to run on CircuitPython, you will instead want to use:
-`Adafruit CircuitPython PyPortal <https://github.com/adafruit/Adafruit_CircuitPython_PyPortal>`
+`Adafruit CircuitPython PyPortal <https://github.com/adafruit/Adafruit_CircuitPython_PyPortal>`_
 
 Dependencies
 =============
