@@ -136,7 +136,10 @@ class PyPortal(PortalBase):
             spi = board.SPI()
 
         graphics = Graphics(
-            default_bg=default_bg, display=display, spi=spi, debug=debug,
+            default_bg=default_bg,
+            display=display,
+            spi=spi,
+            debug=debug,
         )
 
         self._default_bg = default_bg
@@ -180,7 +183,10 @@ class PyPortal(PortalBase):
         )
 
         self.peripherals = Peripherals(
-            spi, display=self.display, touchscreen=touchscreen, debug=debug,
+            spi,
+            display=self.display,
+            touchscreen=touchscreen,
+            debug=debug,
         )
 
         # Convenience Shortcuts for compatibility
