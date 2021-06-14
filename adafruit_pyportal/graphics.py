@@ -77,10 +77,7 @@ class Graphics(GraphicsBase):
 
         """
         super().qrcode(
-            qr_data,
-            qr_size=qr_size,
-            x=x,
-            y=y,
+            qr_data, qr_size=qr_size, x=x, y=y,
         )
         if hide_background:
             self.display.show(self._qr_group)
