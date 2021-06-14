@@ -36,7 +36,6 @@ class OpenWeather_Graphics(displayio.Group):
         self.append(self._text_group)
 
         self._icon_sprite = None
-        self._icon_file = None
         self.set_icon(cwd + "/weather_background.bmp")
 
         self.small_font = bitmap_font.load_font(small_font)
@@ -138,11 +137,9 @@ class OpenWeather_Graphics(displayio.Group):
 
         if not filename:
             return  # we're done, no icon desired
-        if self._icon_file:
-            self._icon_file.close()
-        self._icon_file = open(filename, "rb")
-        icon = displayio.OnDiskBitmap(self._icon_file)
-        self._icon_sprite = displayio.TileGrid(
-            icon, pixel_shader=displayio.ColorConverter()
-        )
-        self._icon_group.append(self._icon_sprite)
+        with open(filename, "rb") as icon_file:
+            icon = displayio.OnDiskBitmap(icon_file)
+            self._icon_sprite = displayio.TileGrid(
+                icon, pixel_shader=displayio.ColorConverter()
+            )
+            self._icon_group.append(self._icon_sprite)
