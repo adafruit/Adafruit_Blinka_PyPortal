@@ -4,6 +4,8 @@
 """
 This is a dependency of adafruit_blinka_pyportal_openweather.py and
 should not be run directly.
+
+Note: This library is designed to run on CPython and not CircuitPython.
 """
 
 import os

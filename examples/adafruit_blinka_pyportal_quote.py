@@ -4,6 +4,8 @@
 """
 You can find any resources in the associated Learn Guide at:
 https://learn.adafruit.com/pyportal-adafruit-quote-board
+
+Note: This library is designed to run on CPython and not CircuitPython.
 """
 import os
 import time

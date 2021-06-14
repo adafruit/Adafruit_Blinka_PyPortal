@@ -8,6 +8,8 @@ if you can find something that spits out JSON data, we can display it
 
 You can find any resources in the associated Learn Guide at:
 https://learn.adafruit.com/pyportal-weather-station
+
+Note: This library is designed to run on CPython and not CircuitPython.
 """
 import os
 import sys
