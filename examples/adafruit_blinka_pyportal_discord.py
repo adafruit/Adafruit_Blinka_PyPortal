@@ -9,6 +9,8 @@ If you can find something that spits out text, we can display it!
 
 You can find any resources in the associated Learn Guide at:
 https://learn.adafruit.com/pyportal-discord-online-count
+
+Note: This library is designed to run on CPython and not CircuitPython.
 """
 import os
 import time
