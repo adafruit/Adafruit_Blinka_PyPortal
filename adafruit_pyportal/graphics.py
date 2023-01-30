@@ -124,5 +124,3 @@ class Graphics(GraphicsBase):
 
         # Save to same filename
         image.save(filename)
-
-    # pylint: enable=no-self-use
