@@ -27,7 +27,7 @@ except AttributeError:
     # okay to run Generic Linux
     DISPLAY_ARG_REQUIRED = True
 
-import displayio
+import fourwire
 import adafruit_ili9341
 from PIL import Image
 from adafruit_portalbase.graphics import GraphicsBase
@@ -52,7 +52,7 @@ class Graphics(GraphicsBase):
                 raise RuntimeError(
                     "Display must be provided on platforms without board."
                 )
-            display_bus = displayio.FourWire(
+            display_bus = fourwire.FourWire(
                 spi, command=board.D25, chip_select=board.CE0
             )
             display = adafruit_ili9341.ILI9341(
