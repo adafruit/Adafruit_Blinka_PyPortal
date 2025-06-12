@@ -48,7 +48,7 @@ DATA_LOCATION = []
 pyportal = PyPortal(url=DATA_SOURCE, json_path=DATA_LOCATION, default_bg=0x000000)
 
 gfx = openweather_graphics.OpenWeather_Graphics(
-    pyportal.splash, am_pm=True, celsius=False
+    pyportal.root_group, am_pm=True, celsius=False
 )
 
 localtile_refresh = None

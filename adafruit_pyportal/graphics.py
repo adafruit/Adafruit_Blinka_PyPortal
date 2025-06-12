@@ -92,7 +92,7 @@ class Graphics(GraphicsBase):
         """Clear any QR codes that are currently on the screen"""
 
         if self._qr_only:
-            self.display.show(self.splash)
+            self.display.root_group = self.root_group
         else:
             try:
                 self._qr_group.pop()
