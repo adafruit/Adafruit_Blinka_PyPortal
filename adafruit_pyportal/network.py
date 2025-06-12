@@ -20,16 +20,14 @@ Implementation Notes
 """
 
 import gc
-import wget as wget_lib
 
-# pylint: disable=unused-import
+import wget as wget_lib
 from adafruit_portalbase.network import (
-    NetworkBase,
     CONTENT_JSON,
     CONTENT_TEXT,
+    NetworkBase,
 )
 
-# pylint: enable=unused-import
 from adafruit_pyportal.wifi import WiFi
 
 __version__ = "0.0.0-auto.0"
@@ -66,7 +64,7 @@ class Network(NetworkBase):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments in function definition
         self,
         *,
         status_neopixel=None,
@@ -78,7 +76,7 @@ class Network(NetworkBase):
         image_resize=None,
         image_position=None,
         image_dim_json_path=None,
-        secrets_data=None
+        secrets_data=None,
     ):
         wifi = WiFi(status_neopixel=status_neopixel)
 
@@ -112,7 +110,9 @@ class Network(NetworkBase):
             aio_key = self._secrets["aio_key"]
         except KeyError as error:
             raise KeyError(
-                "\n\nOur image converter service require a login/password to rate-limit. Please register for a free adafruit.io account and place the user/key in your secrets file under 'aio_username' and 'aio_key'"  # pylint: disable=line-too-long
+                "\n\nOur image converter service require a login/password to rate-limit. "
+                "Please register for a free adafruit.io account and place the user/key in "
+                "your secrets file under 'aio_username' and 'aio_key'"
             ) from error
 
         return IMAGE_CONVERTER_SERVICE % (
@@ -124,8 +124,7 @@ class Network(NetworkBase):
             image_url,
         )
 
-    # pylint: disable=unused-argument
-    def wget(self, url, filename, *, chunk_size=12000):
+    def wget(self, url, filename, *, _chunk_size=12000):
         """Download a url and save to filename location, like the command wget.
         :param url: The URL from which to obtain the data.
         :param filename: The name of the file to save the data to.
@@ -135,9 +134,6 @@ class Network(NetworkBase):
         wget_lib.download(url, filename)
         self.neo_status((0, 0, 0))
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=too-many-branches, too-many-statements
     def process_image(self, json_data):
         """
         Process image content
@@ -169,11 +165,7 @@ class Network(NetworkBase):
                 if iwidth < iheight:
                     image_url = self.image_converter_url(
                         image_url,
-                        int(
-                            self._image_resize[1]
-                            * self._image_resize[1]
-                            / self._image_resize[0]
-                        ),
+                        int(self._image_resize[1] * self._image_resize[1] / self._image_resize[0]),
                         self._image_resize[1],
                     )
                 else:
@@ -189,11 +181,7 @@ class Network(NetworkBase):
             except RuntimeError as error:
                 raise RuntimeError("wget didn't write a complete file") from error
             if iwidth < iheight:
-                pwidth = int(
-                    self._image_resize[1]
-                    * self._image_resize[1]
-                    / self._image_resize[0]
-                )
+                pwidth = int(self._image_resize[1] * self._image_resize[1] / self._image_resize[0])
                 position = (
                     self._image_position[0] + int((self._image_resize[0] - pwidth) / 2),
                     self._image_position[1],

@@ -11,10 +11,13 @@ https://learn.adafruit.com/pyportal-weather-station
 
 Note: This library is designed to run on CPython and not CircuitPython.
 """
+
 import os
 import sys
 import time
+
 import adafruit_blinka_pyportal_openweather_graphics as openweather_graphics
+
 from adafruit_pyportal import PyPortal
 
 # the current working directory (where this file is)
@@ -47,9 +50,7 @@ DATA_LOCATION = []
 # to display it
 pyportal = PyPortal(url=DATA_SOURCE, json_path=DATA_LOCATION, default_bg=0x000000)
 
-gfx = openweather_graphics.OpenWeather_Graphics(
-    pyportal.root_group, am_pm=True, celsius=False
-)
+gfx = openweather_graphics.OpenWeather_Graphics(pyportal.root_group, am_pm=True, celsius=False)
 
 localtile_refresh = None
 weather_refresh = None

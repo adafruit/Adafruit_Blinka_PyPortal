@@ -11,8 +11,10 @@ https://learn.adafruit.com/pyportal-bitcoin-value-display
 
 Note: This library is designed to run on CPython and not CircuitPython.
 """
+
 import os
 import time
+
 from adafruit_pyportal import PyPortal
 
 # You can display in 'GBP', 'EUR' or 'USD'

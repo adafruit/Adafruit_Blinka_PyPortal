@@ -10,11 +10,11 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-from setuptools import setup, find_packages
-
 # To use a consistent encoding
 from codecs import open
 from os import path
+
+from setuptools import find_packages, setup
 
 here = path.abspath(path.dirname(__file__))
 
@@ -62,8 +62,7 @@ setup(
         "Programming Language :: Python :: 3.5",
     ],
     # What does your project relate to?
-    keywords="adafruit blinka circuitpython micropython pyportal displayio touchscreen "
-    "neetwork",
+    keywords="adafruit blinka circuitpython micropython pyportal displayio touchscreen " "neetwork",
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=["adafruit_pyportal"],

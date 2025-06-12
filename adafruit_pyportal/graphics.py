@@ -27,10 +27,10 @@ except AttributeError:
     # okay to run Generic Linux
     DISPLAY_ARG_REQUIRED = True
 
-import displayio
 import adafruit_ili9341
-from PIL import Image
+import displayio
 from adafruit_portalbase.graphics import GraphicsBase
+from PIL import Image
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_Blinka_PyPortal.git"
@@ -45,16 +45,11 @@ class Graphics(GraphicsBase):
 
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(self, *, default_bg=None, display=None, spi=None, debug=False):
         if display is None:
             if DISPLAY_ARG_REQUIRED:
-                raise RuntimeError(
-                    "Display must be provided on platforms without board."
-                )
-            display_bus = displayio.FourWire(
-                spi, command=board.D25, chip_select=board.CE0
-            )
+                raise RuntimeError("Display must be provided on platforms without board.")
+            display_bus = displayio.FourWire(spi, command=board.D25, chip_select=board.CE0)
             display = adafruit_ili9341.ILI9341(
                 display_bus, width=320, height=240, backlight_pin=board.D18
             )
@@ -66,8 +61,7 @@ class Graphics(GraphicsBase):
         # Tracks whether we've hidden the background when we showed the QR code.
         self._qr_only = False
 
-    # pylint: disable=arguments-differ
-    def qrcode(self, qr_data, *, qr_size=1, x=0, y=0, hide_background=False):
+    def qrcode(self, qr_data, *, qr_size=1, x=0, y=0, hide_background=False):  # noqa: PLR0913 Too many arguments in function definition
         """Display a QR code
 
         :param qr_data: The data for the QR code.
@@ -86,9 +80,7 @@ class Graphics(GraphicsBase):
             self.display.show(self._qr_group)
         self._qr_only = hide_background
 
-    # pylint: enable=arguments-differ
-
-    def hide_QR(self):  # pylint: disable=invalid-name
+    def hide_QR(self):
         """Clear any QR codes that are currently on the screen"""
 
         if self._qr_only:
