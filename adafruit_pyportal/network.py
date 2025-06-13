@@ -106,8 +106,8 @@ class Network(NetworkBase):
         with the given width and height. aio_username and aio_key must be
         set in secrets."""
         try:
-            aio_username = self._secrets["aio_username"]
-            aio_key = self._secrets["aio_key"]
+            aio_username = self._get_setting("ADAFRUIT_AIO_USERNAME")
+            aio_key = self._get_setting("ADAFRUIT_AIO_KEY")
         except KeyError as error:
             raise KeyError(
                 "\n\nOur image converter service require a login/password to rate-limit. "
