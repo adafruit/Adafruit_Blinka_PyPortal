@@ -7,8 +7,10 @@ https://learn.adafruit.com/pyportal-adafruit-quote-board
 
 Note: This library is designed to run on CPython and not CircuitPython.
 """
+
 import os
 import time
+
 from adafruit_pyportal import PyPortal
 
 # Set up where we'll be fetching data from

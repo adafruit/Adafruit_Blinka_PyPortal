@@ -40,7 +40,6 @@ class WiFi:
     """
 
     def __init__(self, *, status_neopixel=None):
-
         if status_neopixel:
             self.neopix = neopixel.NeoPixel(status_neopixel, 1, brightness=0.2)
         else:
@@ -72,9 +71,7 @@ class WiFi:
     @property
     def ip_address(self):
         """Look up the IP address and return it"""
-        return subprocess.check_output(
-            "hostname -I | cut -d' ' -f1", shell=True
-        ).decode("utf-8")
+        return subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True).decode("utf-8")
 
     @property
     def enabled(self):

@@ -20,16 +20,16 @@ Implementation Notes
 
 """
 
-import os
 import gc
+import os
 
 try:
     import board
 except AttributeError:
     pass
-from digitalio import DigitalInOut
-from adafruit_stmpe610 import Adafruit_STMPE610_SPI
 import adafruit_focaltouch
+from adafruit_stmpe610 import Adafruit_STMPE610_SPI
+from digitalio import DigitalInOut
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_Blinka_PyPortal.git"
@@ -38,8 +38,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_Blinka_PyPortal.git"
 class Peripherals:
     """Peripherals Helper Class for the PyPortal Library"""
 
-    # pylint: disable=too-many-arguments
-    def __init__(self, spi, display, touchscreen=None, audio_device=1, debug=False):
+    def __init__(self, spi, display, touchscreen=None, audio_device=1, debug=False):  # noqa: PLR0912,PLR0913 Too many branches,Too many arguments in function definition
         self._display = display
 
         self._audio_device = audio_device
