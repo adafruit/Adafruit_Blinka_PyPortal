@@ -8,12 +8,13 @@ should not be run directly.
 Note: This library is designed to run on CPython and not CircuitPython.
 """
 
+import json
 import os
 import time
-import json
+
 import displayio
-from adafruit_display_text.label import Label
 from adafruit_bitmap_font import bitmap_font
+from adafruit_display_text.label import Label
 
 try:
     cwd = os.path.dirname(os.path.realpath(__file__))
@@ -23,6 +24,7 @@ except AttributeError:
 small_font = cwd + "/fonts/Arial-12.bdf"
 medium_font = cwd + "/fonts/Arial-16.bdf"
 large_font = cwd + "/fonts/Arial-Bold-24.bdf"
+
 
 # pylint: disable=too-many-instance-attributes
 class OpenWeather_Graphics(displayio.Group):
@@ -141,7 +143,5 @@ class OpenWeather_Graphics(displayio.Group):
             return  # we're done, no icon desired
         with open(filename, "rb") as icon_file:
             icon = displayio.OnDiskBitmap(icon_file)
-            self._icon_sprite = displayio.TileGrid(
-                icon, pixel_shader=displayio.ColorConverter()
-            )
+            self._icon_sprite = displayio.TileGrid(icon, pixel_shader=displayio.ColorConverter())
             self._icon_group.append(self._icon_sprite)
