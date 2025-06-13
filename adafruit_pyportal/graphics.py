@@ -27,8 +27,8 @@ except AttributeError:
     # okay to run Generic Linux
     DISPLAY_ARG_REQUIRED = True
 
+import fourwire
 import adafruit_ili9341
-import displayio
 from adafruit_portalbase.graphics import GraphicsBase
 from PIL import Image
 
